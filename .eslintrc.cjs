@@ -1,65 +1,67 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
+const path = require('path')
 
 module.exports = {
   extends: [
     // Chúng ta sẽ dùng các rule mặc định từ các plugin mà chúng ta đã cài.
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:jsx-a11y/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react-hooks/recommended",
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:jsx-a11y/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
     // Disable các rule mà eslint xung đột với prettier.
     // Để cái này ở dưới để nó override các rule phía trên!.
-    "eslint-config-prettier",
-    "prettier",
+    'eslint-config-prettier',
+    'prettier'
   ],
-  ignorePatterns: ["dist", ".eslintrc.cjs"],
-  parser: "@typescript-eslint/parser",
-  plugins: ["prettier", "react-refresh"],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['prettier', 'react-refresh'],
   settings: {
     react: {
       // Nói eslint-plugin-react tự động biết version của React.
-      version: "detect",
+      version: 'detect'
     },
     // Nói ESLint cách xử lý các import
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        paths: [path.resolve(__dirname, "")],
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
-    },
+        paths: [path.resolve(__dirname, '')],
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
+    }
+  },
+  // Phan tich cu phap trong file tsconfig.json de src = @
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json'
   },
   env: {
     node: true,
     browser: true,
-    es2020: true,
+    es2020: true
   },
   rules: {
     // Tắt rule yêu cầu import React trong file jsx
-    "react/react-in-jsx-scope": "off",
+    'react/react-in-jsx-scope': 'off',
     // Cảnh báo khi thẻ <a target='_blank'> mà không có rel="noreferrer"
-    "react/jsx-no-target-blank": "warn",
+    'react/jsx-no-target-blank': 'warn',
     // Tăng cường một số rule prettier (copy từ file .prettierrc qua)
-    "prettier/prettier": [
-      "warn",
+    'prettier/prettier': [
+      'warn',
       {
-        arrowParens: "always",
+        arrowParens: 'always',
         semi: false,
-        trailingComma: "none",
+        trailingComma: 'none',
         tabWidth: 2,
-        endOfLine: "auto",
+        endOfLine: 'auto',
         useTabs: false,
         singleQuote: true,
         printWidth: 120,
-        jsxSingleQuote: true,
-      },
+        jsxSingleQuote: true
+      }
     ],
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
-    ],
-  },
-};
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }]
+  }
+}
