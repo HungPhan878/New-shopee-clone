@@ -33,10 +33,10 @@ module.exports = {
     }
   },
   // Phan tich cu phap trong file tsconfig.json de src = @
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: './tsconfig.json'
-  },
+  // parser: '@typescript-eslint/parser',
+  // parserOptions: {
+  //   project: './tsconfig.json'
+  // },
   env: {
     node: true,
     browser: true,

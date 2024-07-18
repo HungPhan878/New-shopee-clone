@@ -1,16 +1,28 @@
-import Login from '@/pages/Login/Login'
-import Register from '@/pages/Register'
+/* eslint-disable import/no-unresolved */
 import { useRoutes } from 'react-router-dom'
+
+// Components
+import RegisterLayout from '@/layouts/RegisterLayout'
+import Login from '@/pages/Login'
+import Register from '@/pages/Register'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: '/login',
-      element: <Login />
+      element: (
+        <RegisterLayout>
+          <Login />
+        </RegisterLayout>
+      )
     },
     {
       path: '/register',
-      element: <Register />
+      element: (
+        <RegisterLayout>
+          <Register />
+        </RegisterLayout>
+      )
     }
   ])
   return routeElements

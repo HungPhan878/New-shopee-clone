@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const plugin = require('tailwindcss/plugin')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -9,16 +12,15 @@ module.exports = {
     './src/**/*.{ts,tsx}'
   ],
   prefix: '',
+  corePlugins: {
+    container: false
+  },
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px'
-      }
-    },
     extend: {
       colors: {
+        blue: '#05a',
+        red: '#d0011b',
+        orange: '#ee4d2d',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -74,5 +76,43 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [
+    plugin(function ({ addComponents }) {
+      addComponents({
+        '.container': {
+          maxWidth: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          paddingLeft: '5px',
+          paddingRight: '5px',
+          '@media screen and (min-width: 576px)': {
+            maxWidth: '540px',
+            paddingLeft: '10px',
+            paddingRight: '10px'
+          },
+          '@media screen and (min-width: 768px)': {
+            maxWidth: '720px',
+            paddingLeft: '15px',
+            paddingRight: '15px'
+          },
+          '@media screen and (min-width: 992px)': {
+            maxWidth: '960px',
+            paddingLeft: '20px',
+            paddingRight: '20px'
+          },
+          '@media screen and (min-width: 1200px)': {
+            maxWidth: '1170px',
+            paddingLeft: '25px',
+            paddingRight: '25px'
+          },
+          '@media screen and (min-width: 1400px)': {
+            maxWidth: '1370px',
+            paddingLeft: '30px',
+            paddingRight: '30px'
+          }
+        }
+      })
+    }),
+    require('tailwindcss-animate')
+  ]
 }
