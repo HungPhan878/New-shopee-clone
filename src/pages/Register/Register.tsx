@@ -3,9 +3,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import omit from 'lodash/omit'
+import { toast } from 'react-toastify'
+import { useMutation } from '@tanstack/react-query'
 
 // components
 import { schema, schemaType } from '@/components/utils/rules'
+import authApi from '@/apis/auth.api'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
@@ -24,10 +28,18 @@ export default function Register() {
     }
   })
 
+  const registerMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirmPassword'>) => authApi.registerApi(body)
+  })
+
   // handler function
   const onSubmit = handleSubmit(
-    (data: FormData) => {
-      console.log(data)
+    async (data: FormData) => {
+      await registerMutation.mutateAsync(omit(data, ['confirmPassword']), {
+        onSuccess: (data) => {
+          toast.success(data.data.message)
+        }
+      })
     },
     (error) => {
       console.log(error)
