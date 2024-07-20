@@ -1,48 +1,87 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable import/no-unresolved */
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
+// components
+import { schema, schemaType } from '@/components/utils/rules'
+
+const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
+type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
+
 export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: yupResolver(registerSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }
+  })
+
+  // handler function
+  const onSubmit = handleSubmit(
+    (data: FormData) => {
+      console.log(data)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+
   return (
     <section className='bg-red'>
       <div className='container'>
         <div
           className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:pr-10'
           style={{
-            backgroundImage: 'url("https://project-shopee-clone-sass.vercel.app/assets/shopee-login-CNlhbosn.jpg")',
+            backgroundImage:
+              'url("https://project-shopee-clone-sass.vercel.app/assets/shopee-login-CNlhbosn.jpg")',
             backgroundRepeat: 'no-repeat'
           }}
         >
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form className='p-10 rounded bg-white shadow-sm'>
-              <div className='text-2xl'>Đăng Ký</div>
+            <form className='p-10 rounded bg-white shadow-sm' noValidate onSubmit={onSubmit}>
+              <h2 className='text-2xl'>Đăng Ký</h2>
               <div className='mt-8'>
                 <input
                   type='email'
-                  name='email'
+                  {...register('email')}
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-md focus:shadow-sm'
                   placeholder='Email'
                 />
-                <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
+                <div className='mt-1 text-red min-h-[1rem] text-sm'>{errors.email?.message}</div>
               </div>
               <div className='mt-3'>
                 <input
                   type='password'
-                  name='password'
+                  {...register('password')}
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-md focus:shadow-sm'
                   placeholder='Password'
                 />
-                <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
+                <div className='mt-1 text-red min-h-[1rem] text-sm'>{errors.password?.message}</div>
               </div>
               <div className='mt-3'>
                 <input
                   type='password'
-                  name='confirm_password'
+                  {...register('confirmPassword')}
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
                   placeholder='Confirm Password'
                 />
-                <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
+                <div className='mt-1 text-red min-h-[1rem] text-sm'>
+                  {errors.confirmPassword?.message}
+                </div>
               </div>
               <div className='mt-3'>
-                <button className='w-full text-center py-3 px-2 uppercase bg-orange text-white text-sm hover:opacity-90'>
+                <button
+                  type='submit'
+                  className='w-full text-center py-3 px-2 uppercase bg-orange text-white text-sm hover:opacity-90'
+                >
                   Đăng ký
                 </button>
               </div>
