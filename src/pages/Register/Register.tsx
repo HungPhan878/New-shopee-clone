@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query'
 // components
 import { schema, schemaType } from '@/components/utils/rules'
 import authApi from '@/apis/auth.api'
+import Input from '@/components/Input'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
@@ -60,35 +61,30 @@ export default function Register() {
           <div className='lg:col-span-2 lg:col-start-4'>
             <form className='p-10 rounded bg-white shadow-sm' noValidate onSubmit={onSubmit}>
               <h2 className='text-2xl'>Đăng Ký</h2>
-              <div className='mt-8'>
-                <input
-                  type='email'
-                  {...register('email')}
-                  className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-md focus:shadow-sm'
-                  placeholder='Email'
-                />
-                <div className='mt-1 text-red min-h-[1rem] text-sm'>{errors.email?.message}</div>
-              </div>
-              <div className='mt-3'>
-                <input
-                  type='password'
-                  {...register('password')}
-                  className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-md focus:shadow-sm'
-                  placeholder='Password'
-                />
-                <div className='mt-1 text-red min-h-[1rem] text-sm'>{errors.password?.message}</div>
-              </div>
-              <div className='mt-3'>
-                <input
-                  type='password'
-                  {...register('confirmPassword')}
-                  className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-                  placeholder='Confirm Password'
-                />
-                <div className='mt-1 text-red min-h-[1rem] text-sm'>
-                  {errors.confirmPassword?.message}
-                </div>
-              </div>
+              <Input
+                type='email'
+                name='email'
+                classNameInputWrap='mt-8'
+                register={register}
+                placeholder='Email'
+                errorMessage={errors.email?.message}
+              />
+
+              <Input
+                type='password'
+                name='password'
+                register={register}
+                placeholder='Mật khẩu'
+                errorMessage={errors.password?.message}
+              />
+
+              <Input
+                type='password'
+                name='confirmPassword'
+                register={register}
+                placeholder='Nhập lại mật khẩu'
+                errorMessage={errors.confirmPassword?.message}
+              />
               <div className='mt-3'>
                 <button
                   type='submit'
