@@ -11,6 +11,8 @@ import { useMutation } from '@tanstack/react-query'
 import { schema, schemaType } from '@/components/utils/rules'
 import authApi from '@/apis/auth.api'
 import Input from '@/components/Input'
+import { isUnprocessableEntityError } from '@/components/utils/utils'
+import { ErrorApiRes } from '@/type/util.type'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
@@ -19,7 +21,8 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
@@ -34,18 +37,26 @@ export default function Register() {
   })
 
   // handler function
-  const onSubmit = handleSubmit(
-    async (data: FormData) => {
-      await registerMutation.mutateAsync(omit(data, ['confirmPassword']), {
-        onSuccess: (data) => {
-          toast.success(data.data.message)
+  const onSubmit = handleSubmit(async (data: FormData) => {
+    await registerMutation.mutateAsync(omit(data, ['confirmPassword']), {
+      onSuccess: (data) => {
+        toast.success(data.data.message)
+      },
+      onError: (error) => {
+        if (isUnprocessableEntityError<ErrorApiRes<Pick<FormData, 'email' | 'password'>>>(error)) {
+          const errors = error?.response?.data.data
+          if (errors) {
+            Object.keys(errors).forEach((error) => {
+              setError(error as keyof Pick<FormData, 'email' | 'password'>, {
+                type: 'Server',
+                message: errors[error as keyof Pick<FormData, 'email' | 'password'>]
+              })
+            })
+          }
         }
-      })
-    },
-    (error) => {
-      console.log(error)
-    }
-  )
+      }
+    })
+  })
 
   return (
     <section className='bg-red'>
