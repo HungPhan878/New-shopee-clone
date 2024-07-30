@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable import/no-unresolved */
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { useContext } from 'react'
 
 // Components
 import RegisterLayout from '@/layouts/RegisterLayout'
@@ -9,21 +10,22 @@ import Register from '@/pages/Register'
 import MainLayout from '@/layouts/MainLayout'
 import ProductList from '@/pages/ProductList'
 import Profile from '@/pages/Profile'
-
-const isAuthentication = false
+import { Context } from '@/contexts/app.context'
 
 const ProtectedRoute: () => JSX.Element = () => {
-  return isAuthentication ? <Outlet /> : <Navigate to='/login' />
+  const { isAuthenticated } = useContext(Context)
+  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
 }
 
 const RejectedRoute: () => JSX.Element = () => {
-  return !isAuthentication ? <Outlet /> : <Navigate to='/' />
+  const { isAuthenticated } = useContext(Context)
+  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
 }
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: '',
       element: <ProtectedRoute />,
       children: [
         {
@@ -37,7 +39,7 @@ export default function useRouteElements() {
       ]
     },
     {
-      path: '/',
+      path: '',
       element: <RejectedRoute />,
       children: [
         {

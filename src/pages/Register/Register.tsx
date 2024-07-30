@@ -2,7 +2,7 @@
 /* eslint-disable import/no-unresolved */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import omit from 'lodash/omit'
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
@@ -13,11 +13,15 @@ import authApi from '@/apis/auth.api'
 import Input from '@/components/Input'
 import { isUnprocessableEntityError } from '@/components/utils/utils'
 import { ErrorApiRes } from '@/type/util.type'
+import { useContext } from 'react'
+import { Context } from '@/contexts/app.context'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
 
 export default function Register() {
+  const navigate = useNavigate()
+  const { setIsAuthenticated } = useContext(Context)
   const {
     register,
     handleSubmit,
@@ -41,6 +45,8 @@ export default function Register() {
     await registerMutation.mutateAsync(omit(data, ['confirmPassword']), {
       onSuccess: (data) => {
         toast.success(data.data.message)
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         if (isUnprocessableEntityError<ErrorApiRes<Pick<FormData, 'email' | 'password'>>>(error)) {

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/no-unresolved */
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -12,11 +12,15 @@ import Input from '@/components/Input'
 import authApi from '@/apis/auth.api'
 import { isUnprocessableEntityError } from '@/components/utils/utils'
 import { ErrorApiRes } from '@/type/util.type'
+import { useContext } from 'react'
+import { Context } from '@/contexts/app.context'
 
 const loginSchema = schema.pick(['email', 'password'])
 type FormData = Pick<schemaType, 'email' | 'password'>
 
 export default function Login() {
+  const navigate = useNavigate()
+  const { setIsAuthenticated } = useContext(Context)
   const {
     register,
     handleSubmit,
@@ -38,6 +42,8 @@ export default function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         toast.success(data.data.message)
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
         if (isUnprocessableEntityError<ErrorApiRes<FormData>>(error)) {

@@ -4,10 +4,14 @@ import { toast } from 'react-toastify'
 
 // components
 import HttpStatusCode from '@/constants/httpStatusCode.enum'
+import { clearLS, getAccessTokenToLS, setAccessTokenToLS } from './auth'
+import { LOGIN_URL, LOGOUT_URL, REGISTER_URL } from '@/apis/auth.api'
 
 class Http {
   instance: AxiosInstance
+  private accessToken: string
   constructor() {
+    this.accessToken = getAccessTokenToLS()
     this.instance = axios.create({
       baseURL: 'https://api-ecom.duthanhduoc.com/',
       timeout: 10000,
@@ -16,11 +20,32 @@ class Http {
       }
     })
 
+    // Add a request interceptor
+    this.instance.interceptors.request.use(
+      (config) => {
+        if (this.accessToken && config.headers) {
+          config.headers.Authorization = this.accessToken
+        }
+        return config
+      },
+      function (error) {
+        // Do something with request error
+        return Promise.reject(error)
+      }
+    )
+
     // Add a response interceptor
     this.instance.interceptors.response.use(
-      function (response) {
-        // Any status code that lie within the range of 2xx cause this function to trigger
-        // Do something with response data
+      (response) => {
+        const { url } = response.config
+        if (url === LOGIN_URL || url === REGISTER_URL) {
+          this.accessToken = response.data.data.access_token
+          setAccessTokenToLS(this.accessToken)
+        } else if (url === LOGOUT_URL) {
+          this.accessToken = ''
+          clearLS()
+        }
+
         return response
       },
       function (error) {

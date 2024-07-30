@@ -3,8 +3,9 @@
 import http from '@/components/utils/http'
 import { AuthResponse } from '@/type/auth.type'
 
-const REGISTER_URL = 'register'
-const LOGIN_URL = 'login'
+export const REGISTER_URL = 'register'
+export const LOGIN_URL = 'login'
+export const LOGOUT_URL = 'logout'
 
 const authApi = {
   registerApi(body: { email: string; password: string }) {
@@ -12,6 +13,9 @@ const authApi = {
   },
   loginApi(body: { email: string; password: string }) {
     return http.post<AuthResponse>(LOGIN_URL, body)
+  },
+  logoutApi() {
+    return http.post(LOGOUT_URL)
   }
 }
 
