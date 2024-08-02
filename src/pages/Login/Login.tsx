@@ -14,6 +14,7 @@ import { isUnprocessableEntityError } from '@/components/utils/utils'
 import { ErrorApiRes } from '@/type/util.type'
 import { useContext } from 'react'
 import { Context } from '@/contexts/app.context'
+import Button from '@/components/Button'
 
 const loginSchema = schema.pick(['email', 'password'])
 type FormData = Pick<schemaType, 'email' | 'password'>
@@ -97,11 +98,14 @@ export default function Login() {
                 errorMessage={errors.password?.message}
               />
 
-              <div className='mt-3'>
-                <button className='w-full text-center py-3 px-2 uppercase bg-orange text-white text-sm hover:opacity-90'>
-                  Đăng nhập
-                </button>
-              </div>
+              <Button
+                type='submit'
+                isLoading={loginMutation.isPending}
+                isDisable={loginMutation.isPending}
+              >
+                Đăng Nhập
+              </Button>
+
               <div className='mt-2 flex justify-between'>
                 <Link to='#' className='capitalize text-[12px] text-blue'>
                   Quên mật khẩu

@@ -15,6 +15,7 @@ import { isUnprocessableEntityError } from '@/components/utils/utils'
 import { ErrorApiRes } from '@/type/util.type'
 import { useContext } from 'react'
 import { Context } from '@/contexts/app.context'
+import Button from '@/components/Button'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
@@ -103,12 +104,13 @@ export default function Register() {
                 errorMessage={errors.confirmPassword?.message}
               />
               <div className='mt-3'>
-                <button
+                <Button
                   type='submit'
-                  className='w-full text-center py-3 px-2 uppercase bg-orange text-white text-sm hover:opacity-90'
+                  isLoading={registerMutation.isPending}
+                  isDisable={registerMutation.isPending}
                 >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-2 flex justify-end'>
                 <Link to='#' className='capitalize text-[12px] text-blue'>
