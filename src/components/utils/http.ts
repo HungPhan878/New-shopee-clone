@@ -4,14 +4,14 @@ import { toast } from 'react-toastify'
 
 // components
 import HttpStatusCode from '@/constants/httpStatusCode.enum'
-import { clearLS, getAccessTokenToLS, setAccessTokenToLS } from './auth'
+import { clearLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
 import { LOGIN_URL, LOGOUT_URL, REGISTER_URL } from '@/apis/auth.api'
 
 class Http {
   instance: AxiosInstance
   private accessToken: string
   constructor() {
-    this.accessToken = getAccessTokenToLS()
+    this.accessToken = getAccessTokenFromLS()
     this.instance = axios.create({
       baseURL: 'https://api-ecom.duthanhduoc.com/',
       timeout: 10000,
@@ -39,8 +39,10 @@ class Http {
       (response) => {
         const { url } = response.config
         if (url === LOGIN_URL || url === REGISTER_URL) {
+          console.log(response)
           this.accessToken = response.data.data.access_token
           setAccessTokenToLS(this.accessToken)
+          setProfileToLS(response.data.data.user)
         } else if (url === LOGOUT_URL) {
           this.accessToken = ''
           clearLS()

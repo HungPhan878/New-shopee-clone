@@ -11,10 +11,11 @@ import MainLayout from '@/layouts/MainLayout'
 import ProductList from '@/pages/ProductList'
 import Profile from '@/pages/Profile'
 import { Context } from '@/contexts/app.context'
+import { path } from '@/constants/path'
 
 const ProtectedRoute: () => JSX.Element = () => {
   const { isAuthenticated } = useContext(Context)
-  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+  return isAuthenticated ? <Outlet /> : <Navigate to={path.login} />
 }
 
 const RejectedRoute: () => JSX.Element = () => {
@@ -29,7 +30,7 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
@@ -43,7 +44,7 @@ export default function useRouteElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <Login />
@@ -51,7 +52,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <Register />
@@ -61,7 +62,7 @@ export default function useRouteElements() {
       ]
     },
     {
-      path: '/',
+      path: path.home,
       index: true,
       element: (
         <MainLayout>

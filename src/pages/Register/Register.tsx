@@ -16,13 +16,14 @@ import { ErrorApiRes } from '@/type/util.type'
 import { useContext } from 'react'
 import { Context } from '@/contexts/app.context'
 import Button from '@/components/Button'
+import { path } from '@/constants/path'
 
 const registerSchema = schema.pick(['email', 'password', 'confirmPassword'])
 type FormData = Pick<schemaType, 'email' | 'password' | 'confirmPassword'>
 
 export default function Register() {
   const navigate = useNavigate()
-  const { setIsAuthenticated } = useContext(Context)
+  const { setIsAuthenticated, setProfile } = useContext(Context)
   const {
     register,
     handleSubmit,
@@ -47,6 +48,7 @@ export default function Register() {
       onSuccess: (data) => {
         toast.success(data.data.message)
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError: (error) => {
@@ -119,7 +121,7 @@ export default function Register() {
               </div>
               <div className='flex items-center justify-center mt-8'>
                 <span className='text-gray-400'>Bạn mới biết đến shopee?</span>
-                <Link className='text-orange ml-1' to='/login'>
+                <Link className='text-orange ml-1' to={path.login}>
                   Đăng Nhập
                 </Link>
               </div>
