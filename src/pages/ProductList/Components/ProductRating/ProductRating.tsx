@@ -13,7 +13,7 @@ interface Props {
 export default function ProductRating({ rating }: Props) {
   // hander function
   const handleWidth = (index: number) => {
-    if (index < rating) {
+    if (index <= rating) {
       return '100%'
     } else if (index > rating && index - rating < 1) {
       const starWidth = (rating - Math.floor(rating)) * 100 + '%'
