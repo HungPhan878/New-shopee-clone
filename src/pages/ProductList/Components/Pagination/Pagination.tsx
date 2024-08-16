@@ -42,7 +42,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
       if (isBeforeDot) {
         isBeforeDot = false
         return (
-          <span key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
+          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -54,7 +54,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
       if (isAfterDot) {
         isAfterDot = false
         return (
-          <span key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
+          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
             ...
           </span>
         )
@@ -103,7 +103,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
             }}
             key={index}
             className={classNames(
-              'bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border hover:opacity-80',
+              'mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:opacity-80',
               {
                 'border-orange': pageNumber === pageCurrent,
                 'border-transparent': pageNumber !== pageCurrent
@@ -117,7 +117,7 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
   }
 
   return (
-    <div className='flex flex-wrap mt-6 justify-center'>
+    <div className='mt-6 flex flex-wrap justify-center'>
       {pageCurrent > 1 ? (
         <Link
           to={{
@@ -127,12 +127,12 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
               page: (pageCurrent - 1).toString()
             }).toString()
           }}
-          className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border hover:opacity-80'
+          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:opacity-80'
         >
           Prev
         </Link>
       ) : (
-        <span className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed  border opacity-80'>
+        <span className='mx-2 cursor-not-allowed rounded border bg-white px-3 py-2 opacity-80 shadow-sm'>
           Prev
         </span>
       )}
@@ -147,12 +147,12 @@ export default function Pagination({ pageSize, queryConfig }: Props) {
               page: (pageCurrent + 1).toString()
             }).toString()
           }}
-          className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border hover:opacity-80'
+          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm hover:opacity-80'
         >
           Next
         </Link>
       ) : (
-        <span className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed  border opacity-80'>
+        <span className='mx-2 cursor-not-allowed rounded border bg-white px-3 py-2 opacity-80 shadow-sm'>
           Next
         </span>
       )}
