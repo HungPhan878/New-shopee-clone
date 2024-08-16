@@ -1,5 +1,8 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable import/no-unresolved */
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import omitBy from 'lodash/omitBy'
+import isUndefined from 'lodash/isUndefined'
 
 // components
 import AsideFilter from './Components/AsideFilter'
@@ -8,14 +11,32 @@ import SortProductList from './Components/SortProductList'
 import productApi from '@/apis/product.api'
 import useQueryParams from '@/hooks/useQueryParams'
 import Pagination from './Components/Pagination'
-import { useState } from 'react'
+import { ProductListConfig } from '@/type/product.type'
+
+export type QueryConfig = {
+  [key in keyof ProductListConfig]: string
+}
 
 export default function ProductList() {
-  const [page, setPage] = useState<number>(1)
-  const queryParams = useQueryParams()
+  const queryParams: QueryConfig = useQueryParams()
+  const queryConfig: QueryConfig = omitBy(
+    {
+      page: queryParams.page || 1,
+      limit: queryParams.limit || 2,
+      order: queryParams.order,
+      sort_by: queryParams.sort_by,
+      exclude: queryParams.exclude,
+      rating_filter: queryParams.rating_filter,
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      name: queryParams.name
+    },
+    isUndefined
+  )
   const getProductList = useQuery({
-    queryKey: ['products', queryParams],
-    queryFn: () => productApi.getProducts(queryParams)
+    queryKey: ['products', queryConfig],
+    queryFn: () => productApi.getProducts(queryConfig as ProductListConfig),
+    placeholderData: keepPreviousData
   })
   const products = getProductList.data?.data?.data.products
 
@@ -35,7 +56,10 @@ export default function ProductList() {
                 </div>
               ))}
             </div>
-            <Pagination pageCurrent={page} setPage={setPage} pageSize={20} />
+            <Pagination
+              queryConfig={queryConfig}
+              pageSize={getProductList.data?.data.data.pagination?.page_size as number}
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,13 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable prettier/prettier */
 import classNames from 'classnames'
-/** 
+import { createSearchParams, Link } from 'react-router-dom'
+
+// components
+import { QueryConfig } from '../../ProductList'
+import { path } from '@/constants/path'
+
+/** thuật toán để code  phân trang
 Với range = 2 áp dụng cho khoảng cách đầu, cuối và xung quanh current_page
 [1] 2 3 ... 19 20
 1 [2] 3 4 ... 19 20 
@@ -14,29 +21,30 @@ Với range = 2 áp dụng cho khoảng cách đầu, cuối và xung quanh curr
 1 2 ... 16 17 [18] 19 20
 1 2 ... 17 18 [19] 20
 1 2 ... 18 19 [20]
+Note: Khi code phân trang nên dùng thẻ link nha
  */
 
 interface Props {
   pageSize: number
-  pageCurrent: number
-  setPage: React.Dispatch<React.SetStateAction<number>>
+  queryConfig: QueryConfig
 }
 
 const RANGE = 2
 
-export default function Pagination({ pageSize, pageCurrent, setPage }: Props) {
-  
+export default function Pagination({ pageSize, queryConfig }: Props) {
+  const pageCurrent = Number(queryConfig.page)
+
   const renderPagination = () => {
     let isBeforeDot = true
     let isAfterDot = true
-    
+
     const renderDotBefore = (index: number) => {
       if (isBeforeDot) {
         isBeforeDot = false
         return (
-          <button key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
+          <span key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
             ...
-          </button>
+          </span>
         )
       }
       return null
@@ -46,9 +54,9 @@ export default function Pagination({ pageSize, pageCurrent, setPage }: Props) {
       if (isAfterDot) {
         isAfterDot = false
         return (
-          <button key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
+          <span key={index} className='bg-white rounded px-3 py-2 shadow-sm mx-2 border'>
             ...
-          </button>
+          </span>
         )
       }
       return null
@@ -79,38 +87,75 @@ export default function Pagination({ pageSize, pageCurrent, setPage }: Props) {
         else if (
           pageCurrent >= pageSize - RANGE * 2 &&
           pageNumber > RANGE &&
-          pageNumber < pageCurrent - RANGE 
+          pageNumber < pageCurrent - RANGE
         ) {
           return renderDotBefore(index)
         }
 
         return (
-          <button
+          <Link
+            to={{
+              pathname: path.home,
+              search: createSearchParams({
+                ...queryConfig,
+                page: pageNumber.toString()
+              }).toString()
+            }}
             key={index}
             className={classNames(
-              'bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border',
+              'bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer border hover:opacity-80',
               {
-                'border-cyan-500': pageNumber === pageCurrent,
+                'border-orange': pageNumber === pageCurrent,
                 'border-transparent': pageNumber !== pageCurrent
               }
             )}
-            onClick={() => setPage(pageNumber)}
           >
             {pageNumber}
-          </button>
+          </Link>
         )
       })
   }
 
   return (
     <div className='flex flex-wrap mt-6 justify-center'>
-      <button className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border'>
-        Prev
-      </button>
+      {pageCurrent > 1 ? (
+        <Link
+          to={{
+            pathname: path.home,
+            search: createSearchParams({
+              ...queryConfig,
+              page: (pageCurrent - 1).toString()
+            }).toString()
+          }}
+          className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border hover:opacity-80'
+        >
+          Prev
+        </Link>
+      ) : (
+        <span className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed  border opacity-80'>
+          Prev
+        </span>
+      )}
+
       {renderPagination()}
-      <button className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border'>
-        Next
-      </button>
+      {pageCurrent < pageSize ? (
+        <Link
+          to={{
+            pathname: path.home,
+            search: createSearchParams({
+              ...queryConfig,
+              page: (pageCurrent + 1).toString()
+            }).toString()
+          }}
+          className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-pointer  border hover:opacity-80'
+        >
+          Next
+        </Link>
+      ) : (
+        <span className='bg-white rounded px-3 py-2 shadow-sm mx-2 cursor-not-allowed  border opacity-80'>
+          Next
+        </span>
+      )}
     </div>
   )
 }
